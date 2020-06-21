@@ -4,7 +4,7 @@ const { WebhookClient } = require("dialogflow-fulfillment");
 const { Card } = require("dialogflow-fulfillment");
 const BIGQUERY = require("@google-cloud/bigquery");
 const BIGQUERY_CLIENT = new BIGQUERY({
-projectId: "rosy-resolver-261210" // * PONER VUESTRO ID DEL PROYECTO *
+projectId: "me-llamo-joxbot" // * PONER VUESTRO ID DEL PROYECTO *
 });
 process.env.DEBUG = "dialogflow:debug";
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
@@ -29,16 +29,16 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
     console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
     console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
     const OUTPUT_CONTEXTS = request.body.queryResult.outputContexts;
-    const EMAIL = OUTPUT_CONTEXTS[OUTPUT_CONTEXTS.length - 1].parameters["email.original"];
+    const EMAIL = OUTPUT_CONTEXTS[OUTPUT_CONTEXTS.length - 2].parameters.email;
     const ISSUE_CATEGORY = OUTPUT_CONTEXTS[OUTPUT_CONTEXTS.length - 1].parameters.category;
     const ISSUE_TEXT = request.body.queryResult.queryText;
  
 
     // The SQL Query to Run
     const SQLQUERY = `WITH pred_table AS (SELECT 5 as seniority, "3-Advanced" as experience,
-          @category as category, "Request" as type)
+          "Technical" as category, "Request" as type)
           SELECT cast(predicted_label as INT64) as predicted_label
-          FROM ML.PREDICT(MODEL helpdesk.prediccion1,  TABLE pred_table)`;
+          FROM ML.PREDICT(MODEL helpdesk.prediccion2,  TABLE pred_table)`;
 
     const OPTIONS = {
       query: SQLQUERY,
